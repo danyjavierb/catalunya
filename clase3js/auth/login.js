@@ -49,4 +49,14 @@ curl --location --request POST 'https://accounts.spotify.com/api/token' \
 --data-urlencode 'client_secret=cliensecretgeneradoendashboard'
 
 
+
+1. al inicio obtener token y guardarlo en localstorage
+2. pintar los ultimos releases
+https://api.spotify.com/v1/browse/new-releases
+con reproduccion
+
+3. pintar las ultimas 10 canciones de un artista usando un inpit y un bonton buscar
+
+
+
 */
