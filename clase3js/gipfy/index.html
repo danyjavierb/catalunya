@@ -10,7 +10,7 @@
     <meta name="author" content="" />
     <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico" />
 
-    <title>Perros app</title>
+    <title>Galeria gifs</title>
 
     <link
       rel="canonical"
@@ -75,7 +75,7 @@
               ></path>
               <circle cx="12" cy="13" r="4"></circle>
             </svg>
-            <strong>Perros Fotos</strong>
+            <strong>Galeria gifs</strong>
           </a>
           <button
             class="navbar-toggler"
@@ -95,25 +95,41 @@
     <main role="main">
       <section class="jumbotron text-center">
         <div class="container">
-          <h1 class="jumbotron-heading">Fotos de perros</h1>
-          <p class="lead text-muted">
-            Aplicacion que muestra fotos aleatorias de perros
-          </p>
-          <p>
-            <a id="mostrarFotos" href="#" class="btn btn-primary my-2"
-              >Mostrar Gifs por palabra clave</a
-            >
-            <input type="text" name="keyword" id="keyword" />
-          </p>
+          <h1 class="jumbotron-heading">Galeria gifs</h1>
+          <p class="lead text-muted">Aplicacion que muestra gifs</p>
+          <div class="row">
+            <div class="col-md-12">
+              <label>Ingrese keyword</label>
+              <input
+                type="text"
+                name="keyword"
+                id="keyword"
+                class="form-control"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 mt-4">
+              <a id="mostrarGifs" href="#" class="btn btn-primary">
+                Mostrar Gifs
+              </a>
+            </div>
+          </div>
         </div>
       </section>
 
       <div class="album py-5 bg-light">
         <div class="container">
-          <div class="row containerPerros">
-            <a id="mostrarMasFotos" href="#" class="btn btn-secondary my-2"
-              >Mostrar mas Gifs de Colombia</a
+          <div class="row justify-content-md-center containerGifs"></div>
+          <div class="col-md-12 text-center">
+            <a
+              style="opacity: 0"
+              id="mostrarMasGifs"
+              href="#"
+              class="btn btn-secondary mb-4"
             >
+              Mostrar Mas Gifs
+            </a>
           </div>
         </div>
       </div>
@@ -152,6 +168,6 @@
     <script src="https://getbootstrap.com/docs/4.0/assets/js/vendor/popper.min.js"></script>
     <script src="https://getbootstrap.com/docs/4.0/dist/js/bootstrap.min.js"></script>
     <script src="https://getbootstrap.com/docs/4.0/assets/js/vendor/holder.min.js"></script>
-    <script src="./perros.js"></script>
+    <script src="./gifs.js"></script>
   </body>
 </html>

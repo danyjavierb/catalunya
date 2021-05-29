@@ -3,22 +3,22 @@
 //</div>`;
 
 const getPerrosElements = (perrosData) => {
-  const contenedoresPerros = perrosData.message.map((url) => {
+  const contenedoresPerros = perrosData.data.map((gif) => {
     const contenedor = document.createElement("div");
     contenedor.classList.add("col-md-4");
     contenedor.innerHTML = `
         <div class="card mb-4 box-shadow">
         <img
           class="card-img-top"
-          src="${url}"
+          src="${gif.images.fixed_width.url}"
           alt="Card image cap"
         />
         <div class="card-body">
           <p class="card-text">
             <a
-              href=" ${url}"
+              href=" ${gif.images.fixed_width.url}"
             >
-              ${url}
+              ${gif.images.fixed_width.url}
             </a>
           </p>
         </div>
@@ -30,12 +30,14 @@ const getPerrosElements = (perrosData) => {
 };
 
 const botonMostarPerros = document.querySelector("#mostrarFotos");
+let offset = 0;
+const limit = 10;
 
 const mostrarFotosHandler = async (ev) => {
   ev.preventDefault();
 
   const perrosResponse = await fetch(
-    "https://dog.ceo/api/breeds/image/random/3"
+    "https://api.giphy.com/v1/gifs/trending?api_key=ik10z2NzXWZ7ROYvidLcrC8SwfIg8c0v"
   );
   const perrosData = await perrosResponse.json();
 
