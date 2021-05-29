@@ -37,3 +37,16 @@ formLogin.addEventListener("submit", async (event) => {
     alert("algo salio mal");
   }
 });
+
+/*para obtener el token de spotify
+importar en postman para referencia
+
+curl --location --request POST 'https://accounts.spotify.com/api/token' \
+--header 'Content-Type: application/x-www-form-urlencoded' \
+--header 'Cookie: __Host-device_id=AQDKguuATrH-C0xesfKZmjEaZQANucuxCFXIFPIpUFfbo5zVy6VaVPFCgtryFiSsrHmJr3dcUWwiuO0HHpB8lUqwmoVC-drTS-U; __HOST-sp_fid=5d085df6-500b-409b-80bc-b5282a8b4141' \
+--data-urlencode 'grant_type=client_credentials' \
+--data-urlencode 'client_id=clientidgeneradoendashboard' \
+--data-urlencode 'client_secret=cliensecretgeneradoendashboard'
+
+
+*/
