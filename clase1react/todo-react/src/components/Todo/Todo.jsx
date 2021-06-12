@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import {
   completeTodoAction,
   deleteTodoAction,
+  editTodoAction,
 } from "./../../state/actions/todoActions";
 import { connect } from "react-redux";
 import "./Todo.css";
@@ -74,6 +75,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     completeTodo: (id) => dispatch(completeTodoAction(id)),
     deleteTodo: (id) => dispatch(deleteTodoAction(id)),
+    editTodo: (id, title) => dispatch(editTodoAction(id, title)),
   };
 };
 

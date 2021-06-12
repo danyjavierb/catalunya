@@ -20,3 +20,11 @@ export const deleteTodoAction = (id) => {
     id,
   };
 };
+
+export const editTodoAction = (id, title) => {
+  return {
+    type: "EDIT_TODO",
+    id,
+    title,
+  };
+};
