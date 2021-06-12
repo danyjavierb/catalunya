@@ -18,10 +18,18 @@ function App() {
     },
   ]);
 
+  const addTodo = (title) => {
+    setTodos([...todos, { id: todos.length + 1, title, completed: false }]);
+  };
+
+  const editTodo = (indentifier, title) => {};
+
+  const deleteTodo = (indentifier) => {};
+
   return (
     <div className="container">
-      <CreateTodoForm></CreateTodoForm>
-      <TodoList todos={todos}></TodoList>
+      <CreateTodoForm addTodo={addTodo}></CreateTodoForm>
+      <TodoList completeTodo={completeTodo} todos={todos}></TodoList>
     </div>
   );
 }

@@ -7,6 +7,7 @@ const CreateTodoForm = (props) => {
   const addNewTodo = (ev) => {
     const title = inputElementRef.current.value;
     // actualizar el estado
+    props.addTodo(title);
     inputElementRef.current.value = "";
   };
 

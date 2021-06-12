@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import Todo from "../Todo/Todo";
 import "./TodoList.css";
 
-const TodoList = ({ todos }) => {
+const TodoList = ({ todos, completeTodo }) => {
   // const renderTodos = (todos) => {
   //   return todos.map((todo) => {
   //     return <Todo></Todo>;
@@ -15,8 +15,15 @@ const TodoList = ({ todos }) => {
       <ul id="incomplete-tasks">
         {
           // usar esto renderTodos(props.todos)
-          todos.map((todo) => {
-            return <Todo todo={todo}></Todo>;
+          todos.map((todo, index) => {
+            return (
+              <Todo
+                index={index}
+                completeTodo={completeTodo}
+                todo={todo}
+                key={index}
+              ></Todo>
+            );
           })
         }
       </ul>
