@@ -22,6 +22,11 @@ function App() {
     setTodos([...todos, { id: todos.length + 1, title, completed: false }]);
   };
 
+  const completeTodo = (index) => {
+    const newTodosState = [...todos];
+    newTodosState[index].completed = !newTodosState[index].completed;
+    setTodos(newTodosState);
+  };
   const editTodo = (indentifier, title) => {};
 
   const deleteTodo = (indentifier) => {};

@@ -8,7 +8,9 @@ const Todo = ({ todo, completeTodo, index }) => {
   return (
     <li>
       <input onClick={completeTodoHanlder} type="checkbox" />
-      <label>{todo.title}</label>
+      <label style={{ textDecoration: todo.completed ? "line-through" : "" }}>
+        {todo.title}
+      </label>
       <input type="text" />
       <button className="edit">Edit</button>
       <button className="delete">Delete</button>

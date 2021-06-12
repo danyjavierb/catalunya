@@ -27,6 +27,8 @@ const TodoList = ({ todos, completeTodo }) => {
           })
         }
       </ul>
+      <h3>Completed</h3>
+      <ul id="completed-tasks">{}</ul>
     </Fragment>
   );
 };
