@@ -1,4 +1,8 @@
 import React, { useRef } from "react";
+//importar los actions que necesitamos
+import { addTodoAction } from "../../state/actions/todoActions";
+// import connect
+import { connect } from "react-redux";
 import "./CreateTodoForm.css";
 
 const CreateTodoForm = (props) => {
@@ -20,4 +24,10 @@ const CreateTodoForm = (props) => {
   );
 };
 
-export default CreateTodoForm;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addTodo: (title) => dispatch(addTodoAction(title)),
+  };
+};
+
+export default connect(null, mapDispatchToProps)(CreateTodoForm);

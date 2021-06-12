@@ -2,10 +2,6 @@ import React, { useRef, useState } from "react";
 import "./Todo.css";
 
 const Todo = ({ todo, completeTodo, editTodo, deleteTodo }) => {
-  const completeTodoHanlder = (ev) => {
-    completeTodo(todo.id);
-  };
-
   const [disabledInput, setDisableInput] = useState(true);
   const [inputValue, setInputValue] = useState(todo.title);
 
@@ -13,6 +9,10 @@ const Todo = ({ todo, completeTodo, editTodo, deleteTodo }) => {
 
   const enableEdit = () => {
     setDisableInput(false);
+  };
+
+  const completeTodoHanlder = (ev) => {
+    completeTodo(todo.id);
   };
 
   const updateTodo = (ev) => {
