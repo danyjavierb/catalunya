@@ -5,6 +5,7 @@ import CreateTodoForm from "./components/CreateTodoForm/CreateTodoForm";
 import TodoList from "./components/TodoList/TodoList";
 
 function App() {
+  const [idTodoSeq, setIdTodoSeq] = useState(0);
   const [todos, setTodos] = useState([
     {
       id: 1,
@@ -19,7 +20,7 @@ function App() {
   ]);
 
   const addTodo = (title) => {
-    setTodos([...todos, { id: todos.length + 1, title, completed: false }]);
+    setTodos([...todos, { id: Date.now(), title, completed: false }]);
   };
 
   const completeTodo = (id) => {
@@ -36,14 +37,40 @@ function App() {
 
     setTodos(newTodosState);
   };
-  const editTodo = (indentifier, title) => {};
+  const editTodo = (id, newTitle) => {
+    const newTodosState = [];
 
-  const deleteTodo = (indentifier) => {};
+    todos.forEach((todo) => {
+      if (todo.id == id) {
+        todo.title = newTitle;
+      }
+
+      newTodosState.push(todo);
+    });
+
+    setTodos(newTodosState);
+  };
+
+  const deleteTodo = (id) => {
+    // todos.forEach((todo) => {
+    //   if (todo.id != id) {
+    //     newTodosState.push(todo);
+    //   }
+    // });
+    const newTodosState = todos.filter((todo) => todo.id != id);
+
+    setTodos(newTodosState);
+  };
 
   return (
     <div className="container">
       <CreateTodoForm addTodo={addTodo}></CreateTodoForm>
-      <TodoList completeTodo={completeTodo} todos={todos}></TodoList>
+      <TodoList
+        deleteTodo={deleteTodo}
+        editTodo={editTodo}
+        completeTodo={completeTodo}
+        todos={todos}
+      ></TodoList>
     </div>
   );
 }

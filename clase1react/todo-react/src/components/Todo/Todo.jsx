@@ -1,24 +1,30 @@
 import React, { useRef, useState } from "react";
 import "./Todo.css";
 
-const Todo = ({ todo, completeTodo }) => {
+const Todo = ({ todo, completeTodo, editTodo, deleteTodo }) => {
   const completeTodoHanlder = (ev) => {
     completeTodo(todo.id);
   };
 
-  const [enableInput, setEnableInput] = useState(false);
+  const [disabledInput, setDisableInput] = useState(true);
+  const [inputValue, setInputValue] = useState(todo.title);
 
   const inputTitleRef = useRef();
 
   const enableEdit = () => {
-    inputTitleRef.current.disabled = false;
-    setEnableInput(true);
+    setDisableInput(false);
   };
 
   const updateTodo = (ev) => {
     if (ev.key == "Enter") {
-      console.log(todo.id, inputTitleRef.current.value);
+      updateTodoHandler();
     }
+  };
+
+  const updateTodoHandler = (ev) => {
+    const newTitle = inputTitleRef.current.value;
+    editTodo(todo.id, newTitle);
+    setDisableInput(true);
   };
 
   return (
@@ -32,19 +38,29 @@ const Todo = ({ todo, completeTodo }) => {
         onKeyPress={updateTodo}
         ref={inputTitleRef}
         className="todoInput"
-        disabled={true}
-        value={todo.title}
+        disabled={disabledInput}
+        value={inputValue}
+        onChange={(e) => {
+          setInputValue(e.target.value);
+        }}
         style={{ textDecoration: todo.completed ? "line-through" : "" }}
       ></input>
       <button onClick={enableEdit} className="edit">
         Edit
       </button>
-      {enableInput && (
-        <button onClick={enableEdit} className="edit">
+      {!disabledInput && (
+        <button onClick={updateTodoHandler} className="edit">
           Guardar
         </button>
       )}
-      <button className="delete">Delete</button>
+      <button
+        onClick={() => {
+          deleteTodo(todo.id);
+        }}
+        className="delete"
+      >
+        Delete
+      </button>
     </li>
   );
 };

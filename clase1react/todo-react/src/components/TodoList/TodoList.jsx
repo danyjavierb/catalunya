@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import Todo from "../Todo/Todo";
 import "./TodoList.css";
 
-const TodoList = ({ todos, completeTodo }) => {
+const TodoList = ({ todos, completeTodo, editTodo, deleteTodo }) => {
   // const renderTodos = (todos) => {
   //   return todos.map((todo) => {
   //     return <Todo></Todo>;
@@ -20,6 +20,8 @@ const TodoList = ({ todos, completeTodo }) => {
             .map((todo) => {
               return (
                 <Todo
+                  editTodo={editTodo}
+                  deleteTodo={deleteTodo}
                   index={todo.id}
                   completeTodo={completeTodo}
                   todo={todo}
