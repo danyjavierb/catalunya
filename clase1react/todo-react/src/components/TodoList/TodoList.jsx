@@ -15,20 +15,35 @@ const TodoList = ({ todos, completeTodo }) => {
       <ul id="incomplete-tasks">
         {
           // usar esto renderTodos(props.todos)
-          todos.map((todo, index) => {
-            return (
-              <Todo
-                index={index}
-                completeTodo={completeTodo}
-                todo={todo}
-                key={index}
-              ></Todo>
-            );
-          })
+          todos
+            .filter((todo) => todo.completed == false)
+            .map((todo) => {
+              return (
+                <Todo
+                  index={todo.id}
+                  completeTodo={completeTodo}
+                  todo={todo}
+                  key={todo.id}
+                ></Todo>
+              );
+            })
         }
       </ul>
       <h3>Completed</h3>
-      <ul id="completed-tasks">{}</ul>
+      <ul id="completed-tasks">
+        {todos
+          .filter((todo) => todo.completed == true)
+          .map((todo) => {
+            return (
+              <Todo
+                index={todo.id}
+                completeTodo={completeTodo}
+                todo={todo}
+                key={todo.id}
+              ></Todo>
+            );
+          })}
+      </ul>
     </Fragment>
   );
 };

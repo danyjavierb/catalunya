@@ -22,9 +22,18 @@ function App() {
     setTodos([...todos, { id: todos.length + 1, title, completed: false }]);
   };
 
-  const completeTodo = (index) => {
+  const completeTodo = (id) => {
     const newTodosState = [...todos];
-    newTodosState[index].completed = !newTodosState[index].completed;
+
+    //#1
+    // newTodosState.forEach((todo) => {
+    //   if (todo.id === id) {
+    //     todo.completed = !todo.completed;
+    //   }
+    // });
+    const indexTodo = newTodosState.findIndex((todo) => todo.id === id);
+    newTodosState[indexTodo].completed = !newTodosState[indexTodo].completed;
+
     setTodos(newTodosState);
   };
   const editTodo = (indentifier, title) => {};
