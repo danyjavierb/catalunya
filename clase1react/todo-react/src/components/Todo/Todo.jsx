@@ -1,4 +1,9 @@
 import React, { useRef, useState } from "react";
+import {
+  completeTodoAction,
+  deleteTodoAction,
+} from "./../../state/actions/todoActions";
+import { connect } from "react-redux";
 import "./Todo.css";
 
 const Todo = ({ todo, completeTodo, editTodo, deleteTodo }) => {
@@ -65,4 +70,11 @@ const Todo = ({ todo, completeTodo, editTodo, deleteTodo }) => {
   );
 };
 
-export default Todo;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    completeTodo: (id) => dispatch(completeTodoAction(id)),
+    deleteTodo: (id) => dispatch(deleteTodoAction(id)),
+  };
+};
+
+export default connect(null, mapDispatchToProps)(Todo);
