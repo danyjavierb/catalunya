@@ -12,9 +12,9 @@ const {
   middlewareExistePais,
   middlewareLogger,
   validarIdMiddleware,
+  onlyAdmin,
 } = require("./middlewares");
 const estudiantes = require("./estudiantes");
-const { noCache } = require("helmet");
 //2. crear la instacia de express
 const server = express();
 
@@ -50,8 +50,10 @@ server.use(
 );
 
 server.use((req, res, next) => {
-  const userInfo = estudiantes.find((est) => est.id == req.user.id);
-  req["userInfo"] = userInfo;
+  if (req.user !== undefined) {
+    const userInfo = estudiantes.find((est) => est.id == req.user.id);
+    req["userInfo"] = userInfo;
+  }
   next();
 });
 
@@ -109,7 +111,7 @@ server.get(
   }
 );
 
-server.get("/estudiantes", (req, res) => {
+server.get("/estudiantes", onlyAdmin, (req, res) => {
   //basepath/estudiantes -> estudiantes
   //basepath/estudiantes?pais=algunPais -> estudiantesPais
 

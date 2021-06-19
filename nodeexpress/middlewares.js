@@ -47,9 +47,20 @@ const validarIdMiddleware = (req, res, next) => {
   }
 };
 
+const onlyAdmin = (req, res, next) => {
+  if (req.userInfo.isAdmin) {
+    next();
+  } else {
+    res
+      .status(400)
+      .json({ error: "recurso disponibles solo para adiminsitrador...." });
+  }
+};
+
 module.exports = {
   middlewareBodyEstudiantes,
   middlewareExistePais,
   middlewareLogger,
   validarIdMiddleware,
+  onlyAdmin,
 };
