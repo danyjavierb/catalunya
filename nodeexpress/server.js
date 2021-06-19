@@ -34,10 +34,10 @@ const estudiantes = [
   },
 ];
 
-server.get("/estudiantes", (req, res) => {
-  res.status(200);
-  res.json(estudiantes);
-});
+// server.get("/estudiantes", (req, res) => {
+//   res.status(200);
+//   res.json(estudiantes);
+// });
 
 server.get("/estudiantes/:idParametro", (req, res) => {
   const idParam = req.params.idParametro;
@@ -47,6 +47,63 @@ server.get("/estudiantes/:idParametro", (req, res) => {
     ? res.status(400).json({ error: `estudiante con id ${idParam} no existe` })
     : res.status(200).json(posibleEstudiante);
 });
+
+// localhost:3000/estudiantes/pais/:algunPais
+
+server.get("/estudiantes/pais/:pais", (request, response) => {
+  const parametroPais = request.params.pais;
+
+  const estudiantesPais = estudiantes.filter(
+    (estudiantes) => estudiantes.pais == parametroPais.toLowerCase()
+  );
+
+  //   const estudiantesPais = [];
+  //   estudiantes.forEach((est) => {
+  //     if (est.pais == parametroPais.toLowerCase()) {
+  //       estudiantesPais.push(est);
+  //     }
+  //   });
+
+  response.status(200);
+  response.json(estudiantesPais);
+});
+
+server.get("/estudiantes", (req, res) => {
+  //basepath/estudiantes -> estudiantes
+  //basepath/estudiantes?pais=algunPais -> estudiantesPais
+
+  if (req.query.pais) {
+    const parametroPais = req.query.pais;
+
+    const estudiantesPais = estudiantes.filter(
+      (estudiantes) => estudiantes.pais == parametroPais.toLowerCase()
+    );
+    res.status(200).json(estudiantesPais);
+  } else {
+    res.status(200).json(estudiantes);
+  }
+});
+
+//crear estudiantes
+server.post("/estudiantes", (req, res) => {
+  if (!req.body.nombre || !req.body.pais || !req.body.edad) {
+    res.status(400).json({ error: "nombre,pais, y edad son obligatorios" });
+  } else {
+    const nuevoEstudiante = {
+      nombre: req.body.nombre,
+      pais: req.body.pais,
+      edad: req.body.edad,
+      hobbies: req.body.hobbies || [],
+      id: estudiantes.length + 1,
+    };
+
+    estudiantes.push(nuevoEstudiante);
+    res.status(201);
+    res.json(nuevoEstudiante);
+  }
+});
+
+server.put("/estudiantes/:id", (req, res) => {});
 
 //6 levantar el servidor
 
