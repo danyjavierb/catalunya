@@ -103,7 +103,33 @@ server.post("/estudiantes", (req, res) => {
   }
 });
 
-server.put("/estudiantes/:id", (req, res) => {});
+server.put("/estudiantes/:id", (req, res) => {
+  const id = req.params.id;
+  const indexEstudiante = estudiantes.findIndex((est) => est.id == id);
+
+  if (indexEstudiante !== -1) {
+    estudiantes[indexEstudiante] = {
+      id: id,
+      nombre: req.body.nombre || estudiantes[indexEstudiante].nombre,
+      pais: req.body.pais || estudiantes[indexEstudiante].pais,
+      edad: req.body.edad || estudiantes[indexEstudiante].edad,
+      hobbies: req.body.hobbies || [],
+    };
+
+    res.status(200).json(estudiantes[indexEstudiante]);
+  } else {
+    res.status(400).json({ error: `estudiante con id ${id} no existe` });
+  }
+});
+
+server.delete("/estudiantes/:id", (req, res) => {
+  const idBorrar = req.params.id;
+  //const idxEliminar = estudiantes.map((est) => est.id).indexOf(idBorrar);
+  const idxEliminar = estudiantes.findIndex((est) => est.id == idBorrar);
+  const eliminado = estudiantes.splice(idxEliminar, 1);
+
+  res.status(200).json(eliminado);
+});
 
 //6 levantar el servidor
 
