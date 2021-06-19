@@ -1,86 +1,61 @@
 //1. importar express y demas librerias
 const express = require("express");
+const helmet = require("helmet");
+const cors = require("cors");
+const compression = require("compression");
+const rateLimit = require("express-rate-limit");
 
+const {
+  middlewareBodyEstudiantes,
+  middlewareExistePais,
+  middlewareLogger,
+  validarIdMiddleware,
+} = require("./middlewares");
+const estudiantes = require("./estudiantes");
 //2. crear la instacia de express
 const server = express();
 
 //3. agregar middlewares globales
 server.use(express.json());
+server.use(helmet());
+server.use(cors());
+server.use(compression());
+
+//3.5 definir politica de rates
+
+const ratePolicy = rateLimit({
+  windowMs: 10000,
+  max: 5,
+  message: { error: "usted ha excedido el limite de peticiones espere 10s" },
+});
 
 //4. definir middlewares particulares
 
-const middlewareLogger = (req, res, next) => {
-  const { method, path, query, body, params } = req;
-
-  console.log(
-    ` METHOD:${method} - PATH:${path} - BODY:${JSON.stringify(
-      body
-    )} - QUERY:${JSON.stringify(query)} - PARAMS:${JSON.stringify(params)}`
-  );
-  next();
-};
-
-const middlewareBodyEstudiantes = (req, res, next) => {
-  if (!req.body.nombre || !req.body.pais || !req.body.edad) {
-    res.status(400).json({ error: "nombre,pais, y edad son obligatorios" });
-  } else {
-    next();
-  }
-};
-
 server.use(middlewareLogger);
+server.use(ratePolicy);
 
-//5. definir endpoints
-const estudiantes = [
-  {
-    id: 1,
-    nombre: "dany",
-    edad: 30,
-    pais: "colombia",
-    hobbies: ["pintar", "videojuegos"],
-  },
-  {
-    id: 2,
-    nombre: "carlos",
-    edad: 15,
-    pais: "argentina",
-    hobbies: ["leer", "cocinar"],
-  },
-  {
-    id: 3,
-    nombre: "camila",
-    edad: 35,
-    pais: "colombia",
-    hobbies: ["leer", "bailar"],
-  },
-];
-
-// server.get("/estudiantes", (req, res) => {
-//   res.status(200);
-//   res.json(estudiantes);
-// });
-
-server.get("/estudiantes/:idParametro", (req, res) => {
-  const idParam = req.params.idParametro;
+server.get("/estudiantes/:id", validarIdMiddleware, (req, res) => {
+  const idParam = req.params.id;
   const posibleEstudiante = estudiantes.find((est) => est.id == idParam);
-
-  !posibleEstudiante
-    ? res.status(400).json({ error: `estudiante con id ${idParam} no existe` })
-    : res.status(200).json(posibleEstudiante);
+  res.status(200).json(posibleEstudiante);
 });
 
 // localhost:3000/estudiantes/pais/:algunPais
 
-server.get("/estudiantes/pais/:pais", (request, response) => {
-  const parametroPais = request.params.pais;
+server.get(
+  "/estudiantes/pais/:pais",
+  middlewareExistePais,
+  (request, response) => {
+    const parametroPais = request.params.pais;
 
-  const estudiantesPais = estudiantes.filter(
-    (estudiantes) => estudiantes.pais == parametroPais.toLowerCase()
-  );
+    const estudiantesPais = estudiantes.filter(
+      (estudiantes) => estudiantes.pais == parametroPais.toLowerCase()
+    );
 
-  response.status(200);
-  response.json(estudiantesPais);
-});
+    response.status(200);
+    response.json(estudiantesPais);
+  }
+);
 
 server.get("/estudiantes", (req, res) => {
   //basepath/estudiantes -> estudiantes
@@ -113,7 +88,7 @@ server.post("/estudiantes", middlewareBodyEstudiantes, (req, res) => {
   res.json(nuevoEstudiante);
 });
 
-server.put("/estudiantes/:id", (req, res) => {
+server.put("/estudiantes/:id", validarIdMiddleware, (req, res) => {
   const id = req.params.id;
   const indexEstudiante = estudiantes.findIndex((est) => est.id == id);
 

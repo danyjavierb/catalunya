@@ -9,6 +9,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "4.17.1"
+    "express": "4.17.1",
+    "helmet": "4.6.0",
+    "cors": "2.8.5",
+    "compression": "1.7.4",
+    "express-rate-limit": "5.2.6"
   }
 }
