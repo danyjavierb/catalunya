@@ -9,6 +9,27 @@ server.use(express.json());
 
 //4. definir middlewares particulares
 
+const middlewareLogger = (req, res, next) => {
+  const { method, path, query, body, params } = req;
+
+  console.log(
+    ` METHOD:${method} - PATH:${path} - BODY:${JSON.stringify(
+      body
+    )} - QUERY:${JSON.stringify(query)} - PARAMS:${JSON.stringify(params)}`
+  );
+  next();
+};
+
+const middlewareBodyEstudiantes = (req, res, next) => {
+  if (!req.body.nombre || !req.body.pais || !req.body.edad) {
+    res.status(400).json({ error: "nombre,pais, y edad son obligatorios" });
+  } else {
+    next();
+  }
+};
+
+server.use(middlewareLogger);
+
 //5. definir endpoints
 const estudiantes = [
   {
@@ -57,13 +78,6 @@ server.get("/estudiantes/pais/:pais", (request, response) => {
     (estudiantes) => estudiantes.pais == parametroPais.toLowerCase()
   );
 
-  //   const estudiantesPais = [];
-  //   estudiantes.forEach((est) => {
-  //     if (est.pais == parametroPais.toLowerCase()) {
-  //       estudiantesPais.push(est);
-  //     }
-  //   });
-
   response.status(200);
   response.json(estudiantesPais);
 });
@@ -85,22 +99,18 @@ server.get("/estudiantes", (req, res) => {
 });
 
 //crear estudiantes
-server.post("/estudiantes", (req, res) => {
-  if (!req.body.nombre || !req.body.pais || !req.body.edad) {
-    res.status(400).json({ error: "nombre,pais, y edad son obligatorios" });
-  } else {
-    const nuevoEstudiante = {
-      nombre: req.body.nombre,
-      pais: req.body.pais,
-      edad: req.body.edad,
-      hobbies: req.body.hobbies || [],
-      id: estudiantes.length + 1,
-    };
+server.post("/estudiantes", middlewareBodyEstudiantes, (req, res) => {
+  const nuevoEstudiante = {
+    nombre: req.body.nombre,
+    pais: req.body.pais,
+    edad: req.body.edad,
+    hobbies: req.body.hobbies || [],
+    id: estudiantes.length + 1,
+  };
 
-    estudiantes.push(nuevoEstudiante);
-    res.status(201);
-    res.json(nuevoEstudiante);
-  }
+  estudiantes.push(nuevoEstudiante);
+  res.status(201);
+  res.json(nuevoEstudiante);
 });
 
 server.put("/estudiantes/:id", (req, res) => {
