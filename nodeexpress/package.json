@@ -13,6 +13,8 @@
     "helmet": "4.6.0",
     "cors": "2.8.5",
     "compression": "1.7.4",
-    "express-rate-limit": "5.2.6"
+    "express-rate-limit": "5.2.6",
+    "express-jwt": "6.0.0",
+    "jsonwebtoken": "8.5.1"
   }
 }

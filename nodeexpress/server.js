@@ -4,6 +4,8 @@ const helmet = require("helmet");
 const cors = require("cors");
 const compression = require("compression");
 const rateLimit = require("express-rate-limit");
+const jwt = require("jsonwebtoken");
+const expressJwt = require("express-jwt");
 
 const {
   middlewareBodyEstudiantes,
@@ -12,6 +14,7 @@ const {
   validarIdMiddleware,
 } = require("./middlewares");
 const estudiantes = require("./estudiantes");
+const { noCache } = require("helmet");
 //2. crear la instacia de express
 const server = express();
 
@@ -33,6 +36,55 @@ const ratePolicy = rateLimit({
 
 server.use(middlewareLogger);
 server.use(ratePolicy);
+
+// 1 jwt crear el secret de jwt, es un string muy complicado
+const secretJwt = "poneralgomuymuycomplicado123123$435*(&^&";
+
+//2 jwt es proteger todos los endpoints menos el de login usando expressJwt
+
+server.use(
+  expressJwt({
+    secret: secretJwt,
+    algorithms: ["HS256"],
+  }).unless({ path: ["/login"] })
+);
+
+server.use((req, res, next) => {
+  const userInfo = estudiantes.find((est) => est.id == req.user.id);
+  req["userInfo"] = userInfo;
+  next();
+});
+
+// 3 jwt escribir un endpoint para retornar el token (jwt)
+
+server.post("/login", (req, res) => {
+  const correoParam = req.body.correo;
+  const contrasenaParam = req.body.contrasena;
+
+  const posibleUsuario = estudiantes.find(
+    (est) => est.correo == correoParam && est.contrasena == contrasenaParam
+  );
+
+  if (!posibleUsuario) {
+    res.status(401).json({ error: "usuario o contrasena invalida" });
+  } else {
+    const token = jwt.sign(
+      {
+        correo: posibleUsuario.correo,
+        id: posibleUsuario.id,
+        otraCosa: "lo que sea",
+      },
+      secretJwt,
+      { expiresIn: "60m" }
+    );
+
+    res.json({ token });
+  }
+});
+
+server.get("/userInfo", (req, res) => {
+  res.json(req.userInfo);
+});
 
 server.get("/estudiantes/:id", validarIdMiddleware, (req, res) => {
   const idParam = req.params.id;
