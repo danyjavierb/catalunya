@@ -6,7 +6,15 @@ const cors = require("cors");
 const compression = require("compression");
 const rateLimit = require("express-rate-limit");
 const db = require("./config/db");
-const { Usuarios, Roles, Platos, Pedidos, EstadosOrden } = require("./models");
+const {
+  Usuarios,
+  Roles,
+  Platos,
+  Pedidos,
+  EstadosOrden,
+  PedidosHasPlatos,
+} = require("./models");
+const e = require("express");
 
 const server = express();
 
@@ -60,6 +68,58 @@ const createUser = async ({
   return user;
 };
 
+const isAdmin = async (req, res, next) => {
+  const usuarioActual = await Usuarios.findByPk(req.user.id, {
+    include: [Roles],
+  });
+  if (usuarioActual.role.nombre == "admin") {
+    next();
+  } else {
+    res
+      .status(401)
+      .json({ error: "usuario debe ser admin para ejecuar esta accion" });
+  }
+};
+
+const crearPedido = async (forma_pago, platos, user_id) => {
+  const dataPlatos = await Promise.all(
+    platos.map(async (plato) => {
+      const platoDB = await Platos.findByPk(plato.id);
+      return {
+        cantidad: plato.cantidad,
+        precio: platoDB.precio,
+        id: platoDB.id,
+      };
+    })
+  );
+
+  const precio_total = dataPlatos.reduce((acc, plato) => {
+    return (acc += parseFloat(plato.precio) * parseInt(plato.cantidad));
+  }, 0);
+  console.log(precio_total);
+  const nuevoPedido = await Pedidos.create({
+    fecha: Date.now(),
+    precio_total,
+    usuario_id: user_id,
+    forma_pago,
+    estado_orden_id: 1,
+  });
+
+  await Promise.all(
+    dataPlatos.map(async (plato) => {
+      await PedidosHasPlatos.create(
+        {
+          pedido_id: nuevoPedido.id,
+          plato_id: plato.id,
+          cantidad: plato.cantidad,
+        },
+        { fields: ["pedido_id", "plato_id", "cantidad"] }
+      );
+    })
+  );
+  return nuevoPedido;
+};
+
 //endpoints
 
 server.post("/login", async (req, res) => {
@@ -100,7 +160,7 @@ server.get("/platos", async (req, res) => {
   res.json(platos);
 });
 
-server.get("/dashboard", async (req, res) => {
+server.get("/dashboard", isAdmin, async (req, res) => {
   const pedidos = await Pedidos.findAll({
     include: [
       { model: Platos },
@@ -121,6 +181,14 @@ server.get("/misPedidos", async (req, res) => {
     where: { usuario_id: req.user.id },
   });
   res.json(platos);
+});
+
+server.post("/pedidos", async (req, res) => {
+  const { forma_pago, platos } = req.body;
+
+  const nuevoPedido = await crearPedido(forma_pago, platos, req.user.id);
+
+  res.json(nuevoPedido);
 });
 
 //endpoints
