@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `restaurante`.`usuarios` (
   `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `rol_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_usuarios_roles_idx` (`rol_id` ASC) VISIBLE,
+  INDEX `fk_usuarios_roles_idx` (`rol_id` ASC) ,
   CONSTRAINT `fk_usuarios_roles`
     FOREIGN KEY (`rol_id`)
     REFERENCES `restaurante`.`roles` (`id`)
@@ -73,8 +73,8 @@ CREATE TABLE IF NOT EXISTS `restaurante`.`pedidos` (
   `usuario_id` INT NOT NULL,
   `estado_orden_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_pedidos_usuarios_idx` (`usuario_id` ASC) VISIBLE,
-  INDEX `fk_pedidos_estados_orden1_idx` (`estado_orden_id` ASC) VISIBLE,
+  INDEX `fk_pedidos_usuarios_idx` (`usuario_id` ASC) ,
+  INDEX `fk_pedidos_estados_orden1_idx` (`estado_orden_id` ASC) ,
   CONSTRAINT `fk_pedidos_usuarios`
     FOREIGN KEY (`usuario_id`)
     REFERENCES `restaurante`.`usuarios` (`id`)
@@ -97,8 +97,8 @@ CREATE TABLE IF NOT EXISTS `restaurante`.`pedidos_has_platos` (
   `plato_id` INT NOT NULL,
   `cantidad` INT NULL,
   PRIMARY KEY (`pedido_id`, `plato_id`),
-  INDEX `fk_pedidos_has_platos_platos1_idx` (`plato_id` ASC) VISIBLE,
-  INDEX `fk_pedidos_has_platos_pedidos1_idx` (`pedido_id` ASC) VISIBLE,
+  INDEX `fk_pedidos_has_platos_platos1_idx` (`plato_id` ASC) ,
+  INDEX `fk_pedidos_has_platos_pedidos1_idx` (`pedido_id` ASC) ,
   CONSTRAINT `fk_pedidos_has_platos_pedidos1`
     FOREIGN KEY (`pedido_id`)
     REFERENCES `restaurante`.`pedidos` (`id`)
