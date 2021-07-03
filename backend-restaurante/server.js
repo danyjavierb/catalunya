@@ -6,7 +6,7 @@ const cors = require("cors");
 const compression = require("compression");
 const rateLimit = require("express-rate-limit");
 const db = require("./config/db");
-const { Usuarios, Roles } = require("./models");
+const { Usuarios, Roles, Platos, Pedidos, EstadosOrden } = require("./models");
 
 const server = express();
 
@@ -93,6 +93,34 @@ server.post("/login", async (req, res) => {
 server.post("/registrar", async (req, res) => {
   const userData = await createUser(req.body);
   res.json(userData);
+});
+
+server.get("/platos", async (req, res) => {
+  const platos = await Platos.findAll({ where: { activo: true } });
+  res.json(platos);
+});
+
+server.get("/dashboard", async (req, res) => {
+  const pedidos = await Pedidos.findAll({
+    include: [
+      { model: Platos },
+      { model: Usuarios, attributes: ["nombre", "direccion"] },
+      { model: EstadosOrden },
+    ],
+  });
+  res.json(pedidos);
+});
+
+server.get("/misPedidos", async (req, res) => {
+  const platos = await Pedidos.findAll({
+    include: [
+      { model: Platos },
+      { model: Usuarios, attributes: ["nombre", "direccion"] },
+      { model: EstadosOrden },
+    ],
+    where: { usuario_id: req.user.id },
+  });
+  res.json(platos);
 });
 
 //endpoints

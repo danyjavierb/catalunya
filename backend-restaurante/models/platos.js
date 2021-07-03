@@ -23,6 +23,7 @@ const Platos = sequelize.define(
   },
   {
     tableName: "platos",
+    underscored: true,
   }
 );
 
