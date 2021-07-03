@@ -31,6 +31,31 @@ const getUserByCorreoContrasena = async (correo, contrasena) => {
   return user;
 };
 
+const createUser = async ({
+  username,
+  nombre,
+  correo,
+  telefono,
+  contrasena,
+  direccion,
+}) => {
+  const user = await db.query(
+    `INSERT INTO usuarios (username,nombre,correo,telefono,contrasena,direccion) values(:username,:nombre,:correo,:telefono, :contrasena,:direccion)`,
+    {
+      replacements: {
+        username,
+        nombre,
+        correo,
+        telefono,
+        contrasena,
+        direccion,
+      },
+      type: db.QueryTypes.INSERT,
+    }
+  );
+  return user;
+};
+
 //endpoints
 
 server.post("/login", async (req, res) => {
@@ -58,6 +83,15 @@ server.post("/login", async (req, res) => {
     console.log(error);
     res.status(500).json({ error: "intente nuevamente mas tarde" });
   }
+});
+
+//middleware payload de creacion de usuarios
+server.post("/usuarios", async (req, res) => {
+  const userData = await createUser(req.body);
+  res.json({
+    id: userData[0],
+    ...req.body,
+  });
 });
 
 //endpoints
