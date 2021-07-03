@@ -6,6 +6,8 @@ const cors = require("cors");
 const compression = require("compression");
 const rateLimit = require("express-rate-limit");
 const db = require("./config/db");
+const { Usuarios, Roles } = require("./models");
+
 const server = express();
 
 server.use(express.json());
@@ -17,17 +19,17 @@ server.use(
   expressJwt({
     secret: JWT_SECRET,
     algorithms: ["HS256"],
-  }).unless({ path: ["/login"] })
+  }).unless({ path: ["/login", "/registrar"] })
 );
 
 const getUserByCorreoContrasena = async (correo, contrasena) => {
-  const user = await db.query(
-    `SELECT * FROM usuarios WHERE correo=:correoParam AND contrasena=:conParam`,
-    {
-      replacements: { correoParam: correo, conParam: contrasena },
-      type: db.QueryTypes.SELECT,
-    }
-  );
+  const user = await Usuarios.findOne({
+    attributes: ["id", "nombre", "correo"],
+    where: {
+      correo,
+      contrasena,
+    },
+  });
   return user;
 };
 
@@ -39,20 +41,22 @@ const createUser = async ({
   contrasena,
   direccion,
 }) => {
-  const user = await db.query(
-    `INSERT INTO usuarios (username,nombre,correo,telefono,contrasena,direccion) values(:username,:nombre,:correo,:telefono, :contrasena,:direccion)`,
-    {
-      replacements: {
-        username,
-        nombre,
-        correo,
-        telefono,
-        contrasena,
-        direccion,
-      },
-      type: db.QueryTypes.INSERT,
-    }
-  );
+  const defaultRol = await Roles.findOne({
+    where: {
+      nombre: "user",
+    },
+  });
+
+  const user = await Usuarios.create({
+    username,
+    nombre,
+    correo,
+    telefono,
+    contrasena,
+    direccion,
+    rol_id: defaultRol.id,
+  });
+
   return user;
 };
 
@@ -64,12 +68,12 @@ server.post("/login", async (req, res) => {
   try {
     const posibleUsuario = await getUserByCorreoContrasena(correo, contrasena);
 
-    if (posibleUsuario.length > 0) {
+    if (posibleUsuario !== null) {
       const token = jwt.sign(
         {
-          id: posibleUsuario[0].id,
-          correo: posibleUsuario[0].correo,
-          nombre: posibleUsuario[0].nombre,
+          id: posibleUsuario.id,
+          correo: posibleUsuario.correo,
+          nombre: posibleUsuario.nombre,
         },
         JWT_SECRET,
         { expiresIn: "60m" }
@@ -86,12 +90,9 @@ server.post("/login", async (req, res) => {
 });
 
 //middleware payload de creacion de usuarios
-server.post("/usuarios", async (req, res) => {
+server.post("/registrar", async (req, res) => {
   const userData = await createUser(req.body);
-  res.json({
-    id: userData[0],
-    ...req.body,
-  });
+  res.json(userData);
 });
 
 //endpoints

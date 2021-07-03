@@ -30,11 +30,13 @@ const Usuarios = sequelize.define(
     },
     activo: {
       type: DataTypes.BOOLEAN,
-      allowNull: false,
+      allowNull: true,
+      defaultValue: true,
     },
   },
   {
     tableName: "usuarios",
+    underscored: true,
   }
 );
 
