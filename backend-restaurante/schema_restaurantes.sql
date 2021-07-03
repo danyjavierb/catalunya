@@ -46,10 +46,8 @@ CREATE TABLE IF NOT EXISTS `restaurante`.`usuarios` (
     REFERENCES `restaurante`.`roles` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB
-AUTO_INCREMENT = 4
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+ENGINE = InnoDB;
+
 
 
 -- -----------------------------------------------------
@@ -110,4 +108,26 @@ CREATE TABLE IF NOT EXISTS `restaurante`.`pedidos_has_platos` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
+
+--seeds
+INSERT INTO `restaurante`.`roles` (`nombre`) VALUES ('admin');
+INSERT INTO `restaurante`.`roles` (`nombre`) VALUES ('user');
+
+
+INSERT INTO `restaurante`.`usuarios` (`username`, `nombre`, `correo`, `telefono`, `direccion`, `contrasena`, `rol_id`) VALUES ('danyjavierb', 'dany bautista', 'danyjavierb@gmail.com', '+573134986746', 'calle123', 'password123', '1');
+INSERT INTO `restaurante`.`usuarios` (`username`, `nombre`, `correo`, `telefono`, `direccion`, `contrasena`, `rol_id`) VALUES ('carlos1', 'carlos miranda', 'carlos@carlos.com', '+573112345678', 'call 900', 'pass2020', '2');
+
+INSERT INTO `restaurante`.`platos` (`nombre`, `precio`) VALUES ('hamburguesa sencilla', '20000');
+INSERT INTO `restaurante`.`platos` (`nombre`, `precio`) VALUES ('papas francesas', '10000');
+INSERT INTO `restaurante`.`platos` (`nombre`, `precio`) VALUES ('perro caliente', '15000');
+INSERT INTO `restaurante`.`platos` (`nombre`, `precio`) VALUES ('helado chocolate', '5000');
+
+
+INSERT INTO `restaurante`.`estados_orden` (`nombre`) VALUES ('nuevo');
+INSERT INTO `restaurante`.`estados_orden` (`nombre`) VALUES ('confirmado');
+INSERT INTO `restaurante`.`estados_orden` (`nombre`) VALUES ('preparando');
+INSERT INTO `restaurante`.`estados_orden` (`nombre`) VALUES ('enviando');
+INSERT INTO `restaurante`.`estados_orden` (`nombre`) VALUES ('cancelado');
+INSERT INTO `restaurante`.`estados_orden` (`nombre`) VALUES ('entregado');
+
 
