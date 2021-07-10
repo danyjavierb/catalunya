@@ -1,12 +1,10 @@
 const { Sequelize } = require("sequelize");
 
-const USER = "root";
-const PASS = "password";
-const HOST = "localhost";
-const DB = "restaurante";
-const PORT = 3306;
+const { DB_USER, DB_PASS, DB_HOST, DB_NAME, DB_PORT } = process.env;
 
-const conString = `mysql://${USER}:${PASS}@${HOST}:${PORT}/${DB}`;
+const conString = `mysql://${DB_USER}${
+  DB_PASS && `:${DB_PASS}`
+}@${DB_HOST}:${DB_PORT}/${DB_NAME}`;
 
 const instanciaSequelize = new Sequelize(conString, {
   operatorAliases: false,

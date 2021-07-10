@@ -1,4 +1,8 @@
-const db = require("./config/db");
+/* const db = require("./config/db");
+
+
+
+
 
 const getUsers = async () => {
   try {
@@ -37,4 +41,6 @@ const getUserByCorreoContrasena = async (correo, contrasena) => {
     console.log(error.message);
   }
 };
-getUserByCorreoContrasena("danyjavierb@gmail.com", "password123");
+ */
+
+console.log(process.env);

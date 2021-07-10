@@ -4,8 +4,7 @@ const jwt = require("jsonwebtoken");
 const helmet = require("helmet");
 const cors = require("cors");
 const compression = require("compression");
-const rateLimit = require("express-rate-limit");
-const db = require("./config/db");
+
 const {
   Usuarios,
   Roles,
@@ -14,7 +13,8 @@ const {
   EstadosOrden,
   PedidosHasPlatos,
 } = require("./models");
-const e = require("express");
+
+const userRepo = require("./repositories/repositorio.usuario");
 
 const server = express();
 
@@ -22,51 +22,14 @@ server.use(express.json());
 server.use(helmet());
 server.use(cors());
 server.use(compression());
-const JWT_SECRET = "asdfjkhasdjkf782347892314jkasdhasd";
+
+const { JWT_SECRET } = process.env;
 server.use(
   expressJwt({
     secret: JWT_SECRET,
     algorithms: ["HS256"],
   }).unless({ path: ["/login", "/registrar"] })
 );
-
-const getUserByCorreoContrasena = async (correo, contrasena) => {
-  const user = await Usuarios.findOne({
-    attributes: ["id", "nombre", "correo"],
-    where: {
-      correo,
-      contrasena,
-    },
-  });
-  return user;
-};
-
-const createUser = async ({
-  username,
-  nombre,
-  correo,
-  telefono,
-  contrasena,
-  direccion,
-}) => {
-  const defaultRol = await Roles.findOne({
-    where: {
-      nombre: "user",
-    },
-  });
-
-  const user = await Usuarios.create({
-    username,
-    nombre,
-    correo,
-    telefono,
-    contrasena,
-    direccion,
-    rol_id: defaultRol.id,
-  });
-
-  return user;
-};
 
 const isAdmin = async (req, res, next) => {
   const usuarioActual = await Usuarios.findByPk(req.user.id, {
@@ -82,42 +45,50 @@ const isAdmin = async (req, res, next) => {
 };
 
 const crearPedido = async (forma_pago, platos, user_id) => {
-  const dataPlatos = await Promise.all(
-    platos.map(async (plato) => {
-      const platoDB = await Platos.findByPk(plato.id);
-      return {
-        cantidad: plato.cantidad,
-        precio: platoDB.precio,
-        id: platoDB.id,
-      };
-    })
-  );
-
-  const precio_total = dataPlatos.reduce((acc, plato) => {
-    return (acc += parseFloat(plato.precio) * parseInt(plato.cantidad));
-  }, 0);
-  console.log(precio_total);
-  const nuevoPedido = await Pedidos.create({
-    fecha: Date.now(),
-    precio_total,
-    usuario_id: user_id,
-    forma_pago,
-    estado_orden_id: 1,
-  });
-
-  await Promise.all(
-    dataPlatos.map(async (plato) => {
-      await PedidosHasPlatos.create(
-        {
-          pedido_id: nuevoPedido.id,
-          plato_id: plato.id,
+  return await sequelize.transaction(async (t) => {
+    const dataPlatos = await Promise.all(
+      platos.map(async (plato) => {
+        const platoDB = await Platos.findByPk(plato.id);
+        return {
           cantidad: plato.cantidad,
+          precio: platoDB.precio,
+          id: platoDB.id,
+        };
+      })
+    );
+
+    const precio_total = dataPlatos.reduce((acc, plato) => {
+      return (acc += parseFloat(plato.precio) * parseInt(plato.cantidad));
+    }, 0);
+    console.log(precio_total);
+    const nuevoPedido = await Pedidos.create(
+      {
+        fecha: Date.now(),
+        precio_total,
+        usuario_id: user_id,
+        forma_pago,
+        estado_orden_id: 1,
+      },
+      { transaction: t }
+    );
+
+    await Promise.all(
+      dataPlatos.map(
+        async (plato) => {
+          await PedidosHasPlatos.create(
+            {
+              pedido_id: nuevoPedido.id,
+              plato_id: plato.id,
+              cantidad: plato.cantidad,
+            },
+            { fields: ["pedido_id", "plato_id", "cantidad"] }
+          );
         },
-        { fields: ["pedido_id", "plato_id", "cantidad"] }
-      );
-    })
-  );
-  return nuevoPedido;
+        { transaction: t }
+      )
+    );
+    return nuevoPedido;
+  });
 };
 
 //endpoints
@@ -126,7 +97,10 @@ server.post("/login", async (req, res) => {
   const { correo, contrasena } = req.body;
 
   try {
-    const posibleUsuario = await getUserByCorreoContrasena(correo, contrasena);
+    const posibleUsuario = await userRepo.getByCorreoContrasena(
+      correo,
+      contrasena
+    );
 
     if (posibleUsuario !== null) {
       const token = jwt.sign(
@@ -151,7 +125,7 @@ server.post("/login", async (req, res) => {
 
 //middleware payload de creacion de usuarios
 server.post("/registrar", async (req, res) => {
-  const userData = await createUser(req.body);
+  const userData = await userRepo.create(req.body);
   res.json(userData);
 });
 
