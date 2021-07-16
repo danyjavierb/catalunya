@@ -42,23 +42,12 @@ const { createStore } = require("redux");
  *
  */
 
-function counterReducer(state = 10, action) {
+function counterReducer(state = 0, action) {
   switch (action.type) {
-    case "USER_INCREMENT":
-      return state + 1;
-    case "USER_DECREMENT":
-      return state - 1;
-    default:
-      return state;
-  }
-}
-
-function counterErroresReducer(state = 10, action) {
-  switch (action.type) {
-    case "ERROR_INCREMENT":
-      return state + 1;
-    case "ERROR_DECREMENT":
-      return state - 1;
+    case "INCREMENT":
+      return state + action.number;
+    case "DECREMENT":
+      return state - action.number;
     default:
       return state;
   }
@@ -74,12 +63,26 @@ store.subscribe(() => {
   console.log(store.getState());
 });
 
+//parametrizar los actions, creacion de action creators
+const incrementBy = (number) => {
+  return {
+    type: "INCREMENT",
+    number,
+  };
+};
+
+const decrementBy = (number) => {
+  return {
+    type: "DECREMENT",
+    number,
+  };
+};
+
 // la forma para modificar el estado es despachando acciones
-store.dispatch({ type: "INCREMENT" });
-// 1
+store.dispatch(incrementBy(10));
+//10
+store.dispatch(incrementBy(10));
+//20
 
-store.dispatch({ type: "DECREMENT" });
-// 0
-
-store.dispatch({ type: "INCREMENT" });
-// 1
+store.dispatch(decrementBy(20));
+//0 

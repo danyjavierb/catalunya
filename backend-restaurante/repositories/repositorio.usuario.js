@@ -8,7 +8,7 @@ module.exports = {
 
   getAll: async () => await Usuarios.findAll({ where: { activo: true } }),
 
-  create: async (correo, contrasena) => {
+  getByCorreoContrasena: async (correo, contrasena) => {
     return await Usuarios.findOne({
       attributes: ["id", "nombre", "correo"],
       where: {
@@ -17,7 +17,7 @@ module.exports = {
       },
     });
   },
-  getByCorreoContrasena: async ({
+  create: async ({
     username,
     nombre,
     correo,

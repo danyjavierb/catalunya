@@ -9,9 +9,14 @@ import { Provider } from "react-redux";
 // importar reducers
 import { reducers } from "./state/reducers";
 // importar createStore
-import { createStore } from "redux";
+import { todos } from "./state/reducers/todoReducerMejorado";
+
+import { configureStore } from "@reduxjs/toolkit";
 // crear el store
-const store = createStore(reducers);
+const store = configureStore({ reducer: todos });
+store.subscribe(() => {
+  console.log(store.getState());
+});
 
 ReactDOM.render(
   <Provider store={store}>

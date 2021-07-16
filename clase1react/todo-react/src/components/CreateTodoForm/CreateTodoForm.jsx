@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 //importar los actions que necesitamos
-import { addTodoAction } from "../../state/actions/todoActions";
+import { addTodo } from "./../../state/reducers/todoReducerMejorado";
 // import connect
 import { connect } from "react-redux";
 import "./CreateTodoForm.css";
@@ -26,7 +26,7 @@ const CreateTodoForm = (props) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addTodo: (title) => dispatch(addTodoAction(title)),
+    addTodo: (title) => dispatch(addTodo(title)),
   };
 };
 

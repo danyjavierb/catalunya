@@ -8,7 +8,7 @@ function App() {
   return (
     <div className="container">
       <CreateTodoForm></CreateTodoForm>
-      <TodoList></TodoList>
+      {/* <TodoList></TodoList> */}
     </div>
   );
 }
