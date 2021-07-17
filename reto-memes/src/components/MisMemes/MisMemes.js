@@ -1,4 +1,5 @@
 import React from "react";
+import { connect } from "react-redux";
 
 function MisMemes({ misMemes }) {
   return (
@@ -10,3 +11,11 @@ function MisMemes({ misMemes }) {
     </div>
   );
 }
+
+const mapStateToProps = (state) => {
+  return {
+    misMemes: state.misMemes,
+  };
+};
+
+export default connect(mapStateToProps, null)(MisMemes);

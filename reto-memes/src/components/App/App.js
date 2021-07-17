@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./App.css";
 import { Form, FormGroup, FormLabel, FormControl } from "react-bootstrap";
 import MemeItem from "./../MemeItem/MemeItem";
-import { MisMemes } from "../MisMemes/MisMemes";
+import MisMemes from "../MisMemes/MisMemes";
 import { connect } from "react-redux";
 import usePrevious from "../hooks/usePrev";
 
