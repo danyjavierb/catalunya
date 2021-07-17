@@ -27,9 +27,9 @@ const newMeme = (json) => {
   };
 };
 
-export const newMemeAction = (newMeme) => {
+export const newMemeAction = (newMemeParam) => {
   return (despachemesEsto) => {
-    postNewMeme(newMeme).then((res) => despachemesEsto(newMeme(res)));
+    postNewMeme(newMemeParam).then((res) => despachemesEsto(newMeme(res)));
   };
 };
 

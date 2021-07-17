@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./App.css";
 import { Form, FormGroup, FormLabel, FormControl } from "react-bootstrap";
-import { MemeItem } from "./../MemeItem/MemeItem";
+import MemeItem from "./../MemeItem/MemeItem";
 import { MisMemes } from "../MisMemes/MisMemes";
 import { connect } from "react-redux";
 import usePrevious from "../hooks/usePrev";
@@ -16,7 +16,7 @@ function App(props) {
     <div>
       <h1>Creador de memes</h1>
 
-      {/* <MisMemes /> */}
+      <MisMemes />
 
       <div>
         <h2>Ingrese textos:</h2>

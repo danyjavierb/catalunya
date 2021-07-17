@@ -36,7 +36,7 @@ const receiveMemes = (json) => {
 function reducer(state = [], action) {
   switch (action.type) {
     case RECEIVE_MEMES_TYPE:
-      return [...state, action.payload];
+      return [...state, ...action.payload];
     default:
       return state;
   }
