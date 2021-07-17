@@ -3,11 +3,27 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./components/App/App";
 import reportWebVitals from "./reportWebVitals";
+import { combinedReducers } from "./state";
+import { configureStore } from "@reduxjs/toolkit";
+import { Provider } from "react-redux";
+import { receiveMemesAction } from "./state/memes.duck";
+
+const store = configureStore({
+  reducer: combinedReducers,
+});
+
+store.subscribe(() => {
+  console.log("store", store.getState());
+});
+
+store.dispatch(receiveMemesAction());
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <Provider store={store}>
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  </Provider>,
   document.getElementById("root")
 );
 

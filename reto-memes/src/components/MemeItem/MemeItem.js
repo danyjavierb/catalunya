@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 
-export function MemeItem(props) {
+export function MemeItem({ primerTexto, segundoTexto, meme }) {
+  function postMeme() {}
+
   return (
     <div className="meme-item">
-      <img src="https://i.imgflip.com/30b1gx.jpg" className="meme-img" />
-      <p className="meme-name"> One Does Not Simply</p>
+      <img src={meme.url} className="meme-img" />
+      <p className="meme-name"> {meme.name}</p>
     </div>
   );
 }
