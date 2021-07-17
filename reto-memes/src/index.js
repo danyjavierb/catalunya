@@ -7,6 +7,7 @@ import { combinedReducers } from "./state";
 import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 import { receiveMemesAction } from "./state/memes.duck";
+import { BrowserRouter } from "react-router-dom";
 
 const store = configureStore({
   reducer: combinedReducers,
@@ -21,7 +22,9 @@ store.dispatch(receiveMemesAction());
 ReactDOM.render(
   <Provider store={store}>
     <React.StrictMode>
-      <App />
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </React.StrictMode>
   </Provider>,
   document.getElementById("root")

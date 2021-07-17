@@ -1,73 +1,55 @@
 import React, { useState } from "react";
 import "./App.css";
-import { Form, FormGroup, FormLabel, FormControl } from "react-bootstrap";
-import MemeItem from "./../MemeItem/MemeItem";
+import CrearMeme from "../CrearMeme/CrearMeme";
 import MisMemes from "../MisMemes/MisMemes";
-import { connect } from "react-redux";
-import usePrevious from "../hooks/usePrev";
+import { Router, Switch, Route, Link } from "react-router-dom";
+import { createBrowserHistory } from "history";
 
-function App(props) {
-  const [memeLimit, setMemeLimit] = useState(8);
-  //const [initialmMemeLimit, setInitialMemeLimit] = useState(0);
-  const [primerTexto, setPrimerTexto] = useState("");
-  const [seguntoTexto, setSegundoTexto] = useState("");
+const history = createBrowserHistory();
 
+const Home = () => {
+  return <h1 className="home-titulo"> Bienvenido a el creador de memes </h1>;
+};
+export default function App(props) {
   return (
     <div>
-      <h1>Creador de memes</h1>
-
-      <MisMemes />
-
       <div>
-        <h2>Ingrese textos:</h2>
-        <Form>
-          <FormGroup>
-            <FormLabel>Primer Texto:</FormLabel>
-            <FormControl
-              type="text"
-              onChange={(ev) => {
-                setPrimerTexto(ev.target.value);
-              }}
-            />
-          </FormGroup>
-          <FormGroup>
-            <FormLabel>Segundo Texto:</FormLabel>
-            <FormControl
-              type="text"
-              onChange={(ev) => {
-                setSegundoTexto(ev.target.value);
-              }}
-            />
-          </FormGroup>
-        </Form>
+        <nav className="navbar navbar-expand-lg navbar-light bg-light">
+          <Link to="/" className="navbar-brand">
+            CREADOR MEMES
+          </Link>
+
+          <div className="navbar-nav ml-auto">
+            <li className="nav-item">
+              <Link to="/crearMemes" className="nav-link">
+                Crear un nuevo meme
+              </Link>
+            </li>
+          </div>
+
+          <div className="navbar-nav ml-auto">
+            <li className="nav-item">
+              <Link to="/misMemes" className="nav-link">
+                Mis memes
+              </Link>
+            </li>
+          </div>
+        </nav>
       </div>
 
-      <div>
-        {props.memes.slice(0, memeLimit).map((meme) => (
-          <MemeItem
-            primerTexto={primerTexto}
-            segundoTexto={seguntoTexto}
-            key={meme.id}
-            meme={meme}
-          ></MemeItem>
-        ))}
-        <div
-          className="meme-more"
-          onClick={() => {
-            setMemeLimit(memeLimit + 8);
-          }}
-        >
-          cargar mas posibilidades...
-        </div>
+      <div className="container mt-3">
+        <Switch>
+          <Route path="/crearMemes">
+            <CrearMeme />
+          </Route>
+          <Route path="/misMemes">
+            <MisMemes></MisMemes>
+          </Route>
+          <Route path="/">
+            <Home></Home>
+          </Route>
+        </Switch>
       </div>
     </div>
   );
 }
-
-const mapStateToProps = (state) => {
-  return {
-    memes: state.memes,
-  };
-};
-
-export default connect(mapStateToProps, null)(App);

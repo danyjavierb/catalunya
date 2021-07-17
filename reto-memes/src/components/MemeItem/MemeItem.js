@@ -1,16 +1,20 @@
 import React, { useEffect } from "react";
-import { connect } from "react-redux";
+import { useDispatch } from "react-redux";
 import { newMemeAction } from "../../state/misMemes.duck";
+import { useHistory } from "react-router";
 
-function MemeItem({ primerTexto, segundoTexto, meme, crearNuevoMeme }) {
+export default function MemeItem({ primerTexto, segundoTexto, meme }) {
+  const dispatch = useDispatch();
+  const history = useHistory();
   function postMeme() {
     const newMeme = {
       template_id: meme.id,
       text0: primerTexto,
       text1: segundoTexto,
     };
-    debugger;
-    crearNuevoMeme(newMeme);
+
+    dispatch(newMemeAction(newMeme));
+    history.push("/misMemes");
   }
 
   return (
@@ -20,11 +24,3 @@ function MemeItem({ primerTexto, segundoTexto, meme, crearNuevoMeme }) {
     </div>
   );
 }
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    crearNuevoMeme: (newMeme) => dispatch(newMemeAction(newMeme)),
-  };
-};
-
-export default connect(null, mapDispatchToProps)(MemeItem);

@@ -1,7 +1,9 @@
 import React from "react";
-import { connect } from "react-redux";
+import { useSelector } from "react-redux";
 
-function MisMemes({ misMemes }) {
+export default function MisMemes() {
+  const misMemes = useSelector((state) => state.misMemes);
+
   return (
     <div className="misMemes">
       <h2>Mis Memes creados</h2>
@@ -11,11 +13,3 @@ function MisMemes({ misMemes }) {
     </div>
   );
 }
-
-const mapStateToProps = (state) => {
-  return {
-    misMemes: state.misMemes,
-  };
-};
-
-export default connect(mapStateToProps, null)(MisMemes);
