@@ -1,0 +1,15 @@
+.list {
+    border-right: 1px solid lightgray;
+    margin: 0 !important;
+}
+
+.list .jumbotron {
+    margin: 40px 0;
+}
+
+.sidebar {
+    width: 100%;
+    position: relative;
+    background: none !important;
+    box-shadow: none;
+}
