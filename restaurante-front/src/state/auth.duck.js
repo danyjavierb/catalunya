@@ -10,11 +10,13 @@ export const loginAction = (email, password) => (dispatch) => {
         type: LOGIN_SUCCESS_TYPE,
         payload: data,
       });
+      return Promise.resolve();
     })
     .catch((err) => {
       dispatch({
         type: LOGIN_FAIL_TYPE,
       });
+      return Promise.reject();
     });
 };
 
