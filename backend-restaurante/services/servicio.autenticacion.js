@@ -23,7 +23,9 @@ module.exports = {
           { expiresIn: "60m" }
         );
 
-        res.json({ token });
+        setTimeout(() => {
+          res.json({ token });
+        }, 5000);
       } else {
         res.status(401).json({ error: "correo o contrasena invalida" });
       }
