@@ -8,7 +8,7 @@ export const loginAction = (email, password) => (dispatch) => {
     .then((data) => {
       dispatch({
         type: LOGIN_SUCCESS_TYPE,
-        payload: { user: data },
+        payload: data,
       });
     })
     .catch((err) => {
@@ -17,3 +17,27 @@ export const loginAction = (email, password) => (dispatch) => {
       });
     });
 };
+
+const token = localStorage.getItem("token");
+const initialState = token
+  ? { isLoggedIn: true, token }
+  : { isLoggedIn: false, token: null };
+
+export default function reducer(state = initialState, action) {
+  const { type, payload } = action;
+
+  switch (type) {
+    case LOGIN_SUCCESS_TYPE:
+      return {
+        isLoggedIn: true,
+        token: payload.token,
+      };
+    case LOGIN_FAIL_TYPE:
+      return {
+        isLoggedIn: false,
+        token: null,
+      };
+    default:
+      return state;
+  }
+}
