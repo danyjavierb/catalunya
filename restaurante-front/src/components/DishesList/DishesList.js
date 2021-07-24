@@ -13,10 +13,10 @@ const DishesList = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(traerPlatosAction());
+    dispatch(traerPlatosAction()).catch((err) => {});
   }, []);
 
-  const { platos } = useSelector((state) => state.platos);
+  const platos = useSelector((state) => state.platos);
 
   const { isLoggedIn } = useSelector((state) => state.auth);
   if (!isLoggedIn) {
@@ -31,12 +31,9 @@ const DishesList = () => {
         </header>
         {platos &&
           platos.map((dish) => {
-            return <Dish dish={dish} />;
+            return <Dish key={dish.id} dish={dish} />;
           })}
       </div>
-      {/* <div className="col-md-3">
-                <Car />
-            </div> */}
     </div>
   );
 };

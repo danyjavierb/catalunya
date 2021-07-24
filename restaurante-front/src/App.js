@@ -24,6 +24,11 @@ const App = () => {
                 Login
               </Link>
             </li>
+            <li className="nav-item">
+              <Link to={"/carrito"} className="nav-link">
+                Cart
+              </Link>
+            </li>
           </div>
           )
         </nav>
