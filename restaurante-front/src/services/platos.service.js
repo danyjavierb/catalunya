@@ -8,6 +8,7 @@ const traerPlatos = () => {
     .then((response) => response.data)
     .catch((err) => {
       console.log(err);
+      throw err;
     });
 };
 

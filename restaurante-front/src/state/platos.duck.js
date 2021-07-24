@@ -3,7 +3,7 @@ import platosService from "../services/platos.service";
 const TRAER_PLATOS_SUCCESS_TYPE = "TRAER_PLATOS_SUCCESS";
 const TRAER_PLATOS_FAIL_TYPE = "TRAER_PLATOS_FAIL";
 
-const traerPlatosAction = () => (dispatch) => {
+export const traerPlatosAction = () => (dispatch) => {
   return platosService
     .traerPlatos()
     .then((platos) => {
@@ -17,7 +17,7 @@ const traerPlatosAction = () => (dispatch) => {
       dispatch({
         type: TRAER_PLATOS_FAIL_TYPE,
       });
-      return Promise.reject();
+      return Promise.reject(err);
     });
 };
 
@@ -31,7 +31,7 @@ export default function reducer(state = [], action) {
       };
     case TRAER_PLATOS_FAIL_TYPE:
       return {
-        platos: [...state],
+        platos: state,
       };
     default:
       return state;

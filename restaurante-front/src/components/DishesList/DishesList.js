@@ -1,22 +1,27 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./DishesList.css";
 import Dish from "../Dish/Dish";
 import Car from "../Car/Car";
+import { useDispatch, useSelector } from "react-redux";
+import state from "../../state";
+import { Redirect } from "react-router-dom";
+import { traerPlatosAction } from "../../state/platos.duck";
 
 const DishesList = () => {
-  const dishes = [
-    {
-      id: 1,
-      nombre: "hamburguesa sencilla",
-      precio: 20000,
-      activo: true,
-      imagen: "https://via.placeholder.com/300/000000/FFFFFF/?text=plato",
-      createdAt: "2021-07-10T16:13:00.000Z",
-      updatedAt: "2021-07-10T16:13:00.000Z",
-    },
-  ];
-
   // TODO si el usuario no está autenticado redireccionar al Login
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(traerPlatosAction());
+  }, []);
+
+  const { platos } = useSelector((state) => state.platos);
+
+  const { isLoggedIn } = useSelector((state) => state.auth);
+  if (!isLoggedIn) {
+    return <Redirect to="/login" />;
+  }
 
   return (
     <div className="container row">
@@ -24,8 +29,8 @@ const DishesList = () => {
         <header className="jumbotron">
           <h3>Lista de platos</h3>
         </header>
-        {dishes &&
-          dishes.map((dish) => {
+        {platos &&
+          platos.map((dish) => {
             return <Dish dish={dish} />;
           })}
       </div>
