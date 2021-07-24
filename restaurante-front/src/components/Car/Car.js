@@ -2,19 +2,21 @@ import React from "react";
 import { Dash } from "react-bootstrap-icons";
 import { Plus } from "react-bootstrap-icons";
 import { Nav, Button } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { addUnit, removeUnit } from "../../state/cart.duck";
 
 const Car = () => {
   const message = "No hay items en el carrito de compras";
 
   const carItems = useSelector((state) => state.cart);
+  const dispatch = useDispatch();
 
   const handleAddUnit = (dish) => {
-    // TODO
+    dispatch(addUnit(dish));
   };
 
   const handleRemoveUnit = (dish) => {
-    // TODO
+    dispatch(removeUnit(dish));
   };
 
   const handleOnSubmitOrder = () => {
@@ -22,7 +24,9 @@ const Car = () => {
   };
 
   const getTotal = () => {
-    // TODO
+    return carItems.reduce((acc, item) => {
+      return acc + item.precio * item.cantidad;
+    }, 0);
   };
 
   if (carItems.length == 0) {

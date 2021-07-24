@@ -3,21 +3,28 @@ import { CartPlusFill } from "react-bootstrap-icons";
 import { CartPlus } from "react-bootstrap-icons";
 import "./Dish.css";
 import { Nav } from "react-bootstrap/Nav";
-import { useDispatch } from "react-redux";
-import { addToCart } from "../../state/cart.duck";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart, addUnit } from "../../state/cart.duck";
 
 const DishesList = ({ dish }) => {
   const dispatch = useDispatch();
 
+  const cartItems = useSelector((state) => state.cart);
+
   const handleAddToCart = (dish) => {
-    const { id, nombre, precio } = dish;
-    const cartItem = {
-      id,
-      nombre,
-      precio,
-      cantidad: 1,
-    };
-    dispatch(addToCart(cartItem));
+    const isInCart = cartItems.some((item) => item.id == dish.id);
+    if (isInCart) {
+      dispatch(addUnit(dish));
+    } else {
+      const { id, nombre, precio } = dish;
+      const cartItem = {
+        id,
+        nombre,
+        precio,
+        cantidad: 1,
+      };
+      dispatch(addToCart(cartItem));
+    }
   };
 
   // useEffect(() => {
