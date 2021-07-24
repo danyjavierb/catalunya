@@ -9,6 +9,7 @@ import "./App.css";
 import Login from "./components/Login/Login";
 import DishesList from "./components/DishesList/DishesList";
 import Car from "./components/Car/Car";
+import Dashboard from "./components/Dashboard/Dashboard";
 
 const App = () => {
   return (
@@ -29,6 +30,11 @@ const App = () => {
                 Cart
               </Link>
             </li>
+            <li className="nav-item">
+              <Link to={"/dashboard"} className="nav-link">
+                Dashboard
+              </Link>
+            </li>
           </div>
           )
         </nav>
@@ -38,6 +44,7 @@ const App = () => {
             <Route exact path="/login" component={Login} />
             <Route exact path="/platos" component={DishesList} />
             <Route exact path="/carrito" component={Car} />
+            <Route exact path="/dashboard" component={Dashboard} />
           </Switch>
         </div>
       </div>

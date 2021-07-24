@@ -1,6 +1,15 @@
 const ADD_CART_SUCCESS_TYPE = "ADD_CART_SUCCESS";
 const ADD_UNIT_TYPE = "ADD_UNIT";
 const REMOVE_UNIT_TYPE = "REMOVE_UNIT";
+const EMPTY_CART_TYPE = "EMPTY_CART";
+
+export const emptyCart = () => (dispatch) => {
+  dispatch({
+    type: EMPTY_CART_TYPE,
+    payload: null,
+  });
+  return Promise.resolve();
+};
 
 export const addToCart = (cartItem) => (dispatch) => {
   dispatch({
@@ -52,6 +61,8 @@ export default function (state = [], action) {
         }
         return item;
       });
+    case EMPTY_CART_TYPE:
+      return [];
     default:
       return state;
   }

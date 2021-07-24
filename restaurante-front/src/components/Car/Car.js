@@ -1,12 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { Dash } from "react-bootstrap-icons";
 import { Plus } from "react-bootstrap-icons";
 import { Nav, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { addUnit, removeUnit } from "../../state/cart.duck";
+import { addUnit, emptyCart, removeUnit } from "../../state/cart.duck";
+import { enviarPedidoAction } from "../../state/pedidos.duck";
+import { propTypes } from "react-bootstrap/esm/Image";
 
-const Car = () => {
+const Car = (props) => {
   const message = "No hay items en el carrito de compras";
+
+  const [formaPago, setFormaPago] = useState("DATAFONO");
 
   const carItems = useSelector((state) => state.cart);
   const dispatch = useDispatch();
@@ -20,7 +24,10 @@ const Car = () => {
   };
 
   const handleOnSubmitOrder = () => {
-    // TODO
+    dispatch(enviarPedidoAction(carItems, formaPago)).then((nuevoPedido) => {
+      alert(`pedido creado con id ${nuevoPedido.id}`);
+      dispatch(emptyCart());
+    });
   };
 
   const getTotal = () => {
@@ -55,6 +62,17 @@ const Car = () => {
         );
       })}
       <div>Total: {carItems.length && getTotal()}</div>
+      <div>
+        Forma de pago:
+        <select
+          onChange={(ev) => {
+            setFormaPago(ev.target.value);
+          }}
+        >
+          <option value="DATAFONO">DATAFONO</option>
+          <option value="EFECTIVO">EFECTIVO</option>
+        </select>
+      </div>
       <Button onClick={() => handleOnSubmitOrder()}>Hacer pedido</Button>
     </Nav>
   );
