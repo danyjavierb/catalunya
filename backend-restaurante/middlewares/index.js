@@ -1,3 +1,6 @@
+const expressJwt = require("express-jwt");
+const { JWT_SECRET } = process.env;
+
 const isAdmin = async (req, res, next) => {
   const usuarioActual = await Usuarios.findByPk(req.user.id, {
     include: [Roles],
@@ -11,4 +14,9 @@ const isAdmin = async (req, res, next) => {
   }
 };
 
-module.exports = { isAdmin };
+const authLogin = expressJwt({
+  secret: JWT_SECRET,
+  algorithms: ["HS256"],
+}).unless({ path: ["/login", "/registrar"] });
+
+module.exports = { isAdmin, authLogin };
