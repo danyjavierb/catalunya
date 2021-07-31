@@ -5,6 +5,7 @@ const compression = require("compression");
 const authService = require("./services/servicio.autenticacion");
 const platosService = require("./services/servicio.platos");
 const pedidosRouter = require("./routes/rutas.pedidos");
+const { validarDataRegistro } = require("./middlewares");
 
 const { authLogin } = require("./middlewares");
 
@@ -23,7 +24,7 @@ server.use("/pedidos", pedidosRouter);
 
 server.post("/login", authService.login);
 
-server.post("/registrar", authService.registrar);
+server.post("/registrar", validarDataRegistro, authService.registrar);
 
 server.get("/platos", platosService.getAll);
 

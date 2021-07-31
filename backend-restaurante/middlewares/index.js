@@ -1,6 +1,16 @@
 const expressJwt = require("express-jwt");
 const { JWT_SECRET } = process.env;
 
+const validarDataRegistro = async (req, res, next) => {
+  const { username, nombre, correo, contrasena, direccion, telefono } =
+    req.body;
+  if (username && nombre && correo && contrasena && direccion && telefono) {
+    next();
+  } else {
+    res.status(400).json({ error: "Todos los campos son obligatorios" });
+  }
+};
+
 const isAdmin = async (req, res, next) => {
   const usuarioActual = await Usuarios.findByPk(req.user.id, {
     include: [Roles],
@@ -19,4 +29,4 @@ const authLogin = expressJwt({
   algorithms: ["HS256"],
 }).unless({ path: ["/login", "/registrar"] });
 
-module.exports = { isAdmin, authLogin };
+module.exports = { isAdmin, authLogin, validarDataRegistro };
