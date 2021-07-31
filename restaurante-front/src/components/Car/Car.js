@@ -5,7 +5,6 @@ import { Nav, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { addUnit, emptyCart, removeUnit } from "../../state/cart.duck";
 import { enviarPedidoAction } from "../../state/pedidos.duck";
-import { propTypes } from "react-bootstrap/esm/Image";
 
 const Car = (props) => {
   const message = "No hay items en el carrito de compras";
@@ -50,11 +49,17 @@ const Car = (props) => {
       {carItems.map((item) => {
         return (
           item.cantidad > 0 && (
-            <Nav.Item>
+            <Nav.Item key={`${item.nombre}-${item.cantidad}`}>
               <h6>{item.nombre}</h6>
               <span>Cantidad: {item.cantidad}</span>
-              <Dash onClick={() => handleRemoveUnit(item)} />
-              <Plus onClick={() => handleAddUnit(item)} />
+              <Dash
+                data-testid={`remove_${item.id}`}
+                onClick={() => handleRemoveUnit(item)}
+              />
+              <Plus
+                data-testid={`add_${item.id}`}
+                onClick={() => handleAddUnit(item)}
+              />
               <br />
               <br />
             </Nav.Item>
